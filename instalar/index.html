@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0b2a4e">
+<title>Instalar o Visitas Felice</title>
+<link rel="icon" href="../icone-192.png">
+<!-- Página de instalação: um link único (…/visitas-felice/instalar/) para o colega escolher o aparelho.
+     Os downloads vêm da última Release do GitHub com nomes fixos; o iPhone abre o app em ../ (sem arquivo).
+     Copiada para web-dist/instalar/ pelo scripts/web.mjs; o service worker do app não a substitui. -->
+<style>
+  :root {
+    --azul: #0b2a4e; --azul-claro: #1d4f8c; --fundo: #f3f5f8; --cartao: #ffffff; --texto: #1a2433; --suave: #5b6778;
+    --borda: #d8dee7; --aviso-fundo: #fff6dd; --aviso-texto: #6b4e00; --foco: #2f7de1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --fundo: #0e131a; --cartao: #171e28; --texto: #e7ecf3; --suave: #9aa7b8; --borda: #2a3442;
+      --azul-claro: #6ea6ec; --aviso-fundo: #3a3016; --aviso-texto: #f3d98b; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--fundo); color: var(--texto); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  header { background: var(--azul); color: #fff; padding: 20px 16px 22px; padding-top: max(20px, env(safe-area-inset-top)); }
+  .topo { max-width: 720px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
+  .topo img { width: 52px; height: 52px; border-radius: 12px; }
+  h1 { margin: 0; font-size: 1.35rem; line-height: 1.2; }
+  header p { margin: 2px 0 0; opacity: .85; }
+  main { max-width: 720px; margin: 0 auto; padding: 20px 16px 40px; }
+  h2 { font-size: 1rem; margin: 0 0 10px; color: var(--suave); font-weight: 600; }
+  .escolhas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
+  .escolha { appearance: none; border: 2px solid var(--borda); background: var(--cartao); color: var(--texto); border-radius: 14px;
+    padding: 14px 8px; font: inherit; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .escolha svg { width: 30px; height: 30px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .escolha small { font-weight: 400; color: var(--suave); font-size: .8rem; }
+  .escolha[aria-pressed="true"] { border-color: var(--azul-claro); box-shadow: 0 0 0 1px var(--azul-claro) inset; }
+  .escolha:focus-visible, .botao:focus-visible { outline: 3px solid var(--foco); outline-offset: 2px; }
+  section.painel { background: var(--cartao); border: 1px solid var(--borda); border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+  section.painel h3 { margin: 0 0 4px; font-size: 1.2rem; }
+  .sub { margin: 0 0 16px; color: var(--suave); }
+  .botao { display: block; text-align: center; background: var(--azul); color: #fff; text-decoration: none; font-weight: 700;
+    border: 0; border-radius: 12px; padding: 14px 16px; font: inherit; font-weight: 700; width: 100%; cursor: pointer; }
+  @media (prefers-color-scheme: dark) { .botao { background: var(--azul-claro); color: #0b1522; } }
+  .botao.secundario { background: transparent; color: var(--azul-claro); border: 2px solid var(--azul-claro); margin-top: 10px; }
+  ol { padding-left: 1.3em; margin: 18px 0 0; }
+  li { margin-bottom: 8px; }
+  .aviso { background: var(--aviso-fundo); color: var(--aviso-texto); border-radius: 10px; padding: 10px 12px; margin-top: 14px; font-size: .95rem; }
+  .aviso p { margin: 0 0 6px; } .aviso p:last-child { margin: 0; }
+  footer { color: var(--suave); font-size: .9rem; text-align: center; margin-top: 8px; }
+  [hidden] { display: none !important; }
+  @media (max-width: 380px) { .escolha { padding: 12px 4px; font-size: .9rem; } .escolha small { display: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="topo">
+    <img src="../icone-192.png" alt="">
+    <div>
+      <h1>Visitas Felice</h1>
+      <p>Instalação · Grupo Felice</p>
+    </div>
+  </div>
+</header>
+<main>
+  <h2>Onde você vai instalar?</h2>
+  <div class="escolhas" role="group" aria-label="Aparelho">
+    <button type="button" class="escolha" data-alvo="android" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg>
+      Android<small>celular</small>
+    </button>
+    <button type="button" class="escolha" data-alvo="iphone" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 4.5h4"/></svg>
+      iPhone<small>celular</small>
+    </button>
+    <button type="button" class="escolha" data-alvo="pc" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/></svg>
+      Computador<small>Windows</small>
+    </button>
+  </div>
+
+  <section class="painel" id="android">
+    <h3>Celular Android</h3>
+    <p class="sub">App para fazer as visitas nas lojas (cerca de 5 MB).</p>
+    <a class="botao" href="https://github.com/drgorgen/visitas-felice/releases/latest/download/VisitasFelice.apk">Baixar o app Android</a>
+    <ol>
+      <li>Toque em <b>Baixar o app Android</b>.</li>
+      <li>Abra o arquivo baixado (pela notificação, ou no app <b>Arquivos → Downloads</b>).</li>
+      <li>O Android pede para <b>permitir instalar apps desconhecidos</b> para o navegador: permita só para ele.</li>
+      <li>Toque em <b>Instalar</b>. Se aparecer um aviso do Play Protect, é normal (o app não vem da Play Store): escolha instalar mesmo assim.</li>
+      <li>Abra <b>Visitas Felice</b> e informe o seu nome, a sua área e as lojas que você visita.</li>
+    </ol>
+    <div class="aviso">
+      <p><b>Para atualizar:</b> baixe de novo e instale <b>por cima</b>.</p>
+      <p><b>Nunca desinstale o app</b> antes de exportar as visitas: isso apaga as que ainda estão só no celular.</p>
+    </div>
+  </section>
+
+  <section class="painel" id="iphone">
+    <h3>iPhone</h3>
+    <p class="sub">No iPhone não há arquivo para baixar: o app é aberto pelo Safari e fica na Tela de Início.</p>
+    <p class="aviso" id="nao-safari" hidden>Você está em outro navegador. <b>Abra este link no Safari</b> (copie abaixo e cole no Safari): só ele consegue pôr o app na Tela de Início.</p>
+    <a class="botao" href="../">Abrir o app</a>
+    <button type="button" class="botao secundario" id="copiar">Copiar o link do app</button>
+    <ol>
+      <li>Toque em <b>Abrir o app</b> (no <b>Safari</b>).</li>
+      <li>Toque em <b>Compartilhar</b> (o quadrado com a seta para cima) e depois em <b>Adicionar à Tela de Início</b> → <b>Adicionar</b>.</li>
+      <li>Feche o Safari e abra o app <b>pelo ícone "Visitas"</b>. Informe o seu nome, a sua área e as lojas que você visita.</li>
+    </ol>
+    <div class="aviso">
+      <p>Precisa de <b>iOS 16 ou mais novo</b>, e a primeira abertura precisa de internet; depois funciona sem internet.</p>
+      <p>Use sempre pelo ícone. <b>Apagar o ícone apaga as visitas</b> que ainda não foram exportadas.</p>
+      <p>Endereço do app: https://drgorgen.github.io/visitas-felice/</p>
+    </div>
+  </section>
+
+  <section class="painel" id="pc">
+    <h3>Computador (Windows)</h3>
+    <p class="sub">Central de Visitas: recebe as visitas do celular, mostra a evolução das lojas e gera os relatórios (cerca de 110 MB).</p>
+    <a class="botao" href="https://github.com/drgorgen/visitas-felice/releases/latest/download/Central-de-Visitas-Setup.exe">Baixar a Central de Visitas</a>
+    <ol>
+      <li>Baixe e abra o arquivo <b>Central-de-Visitas-Setup.exe</b>.</li>
+      <li>O Windows deve mostrar <b>"O Windows protegeu o computador"</b>: é normal. Clique em <b>Mais informações</b> → <b>Executar assim mesmo</b>.</li>
+      <li>Na primeira abertura, informe o seu nome, a sua área e as lojas, e escolha a <b>pasta onde você salva os arquivos .zip</b> que o celular exporta (por exemplo, uma pasta no seu OneDrive).</li>
+    </ol>
+    <div class="aviso">
+      <p>Windows 10 ou 11. <b>Para atualizar:</b> instale a versão nova por cima; os seus dados ficam.</p>
+    </div>
+  </section>
+
+  <footer>Grupo Felice · Visitas às lojas</footer>
+</main>
+<script>
+  (function () {
+    var LINK_APP = 'https://drgorgen.github.io/visitas-felice/';
+    var botoes = [].slice.call(document.querySelectorAll('.escolha'));
+    var paineis = ['android', 'iphone', 'pc'];
+    function mostrar(alvo) {
+      paineis.forEach(function (id) { document.getElementById(id).hidden = id !== alvo; });
+      botoes.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.alvo === alvo)); });
+    }
+    botoes.forEach(function (b) {
+      b.addEventListener('click', function () { mostrar(b.dataset.alvo); history.replaceState(null, '', '#' + b.dataset.alvo); });
+    });
+    var ua = navigator.userAgent;
+    var ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var inicial = location.hash.slice(1);
+    if (paineis.indexOf(inicial) < 0) inicial = ios ? 'iphone' : /Android/i.test(ua) ? 'android' : 'pc';
+    mostrar(inicial);
+    if (ios && /CriOS|FxiOS|EdgiOS|OPiOS|GSA\//.test(ua)) document.getElementById('nao-safari').hidden = false;
+    var copiar = document.getElementById('copiar');
+    copiar.addEventListener('click', function () {
+      var feito = function () { copiar.textContent = 'Link copiado'; };
+      if (navigator.clipboard) navigator.clipboard.writeText(LINK_APP).then(feito, function () { prompt('Copie o link:', LINK_APP); });
+      else prompt('Copie o link:', LINK_APP);
+    });
+  })();
+</script>
+</body>
+</html>
